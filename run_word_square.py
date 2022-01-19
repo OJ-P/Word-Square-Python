@@ -1,5 +1,4 @@
 import sys  # to allow sys.exit()
-import isdigit
 
 
 def main():  # main function - runs menu load function
