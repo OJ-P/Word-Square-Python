@@ -28,7 +28,7 @@ def instructions():  # prints instructions on how program functions
 
 
 def run_word_square():  # creates word square
-    valid_user_input = get_user_input()
+    valid_user_input = get_user_input()  # call func to get valid user input to create word square with
 
 
 def get_user_input():  # asks user for user input and formats it
@@ -48,7 +48,7 @@ def validate_user_input(user_input, str_length):  # validates if user input is u
     elif int(user_input[0]) == 0:  # checks if first character of string is greater than zero
         print("Invalid input - the first character can not be zero")
         return False
-    elif (int(user_input[0]) ** 2) != str_length:  # first character must equal the length of the string
+    elif (int(user_input[0]) ** 2) != str_length:  # int value at index[0] of user_input squared must equal str_length
         print("Invalid input - input length must equal first character (number) squared")
         return False
     for current_char in user_input[1:str_length:1]:  # [start:end:step] iterates through input string from index[1]
@@ -59,8 +59,8 @@ def validate_user_input(user_input, str_length):  # validates if user input is u
             return True
 
 
-def exit_program():
+def exit_program():  # Quits program
     sys.exit()
 
 
-main()
+main()  # Calls main function
