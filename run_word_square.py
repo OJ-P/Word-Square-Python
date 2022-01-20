@@ -1,4 +1,5 @@
 import sys  # to allow sys.exit()
+import requests  # to allow reading text from URL
 
 
 def main():  # main function - runs menu load function
@@ -28,6 +29,7 @@ def instructions():  # prints instructions on how program functions
 
 def run_word_square():  # creates word square
     valid_user_input = get_user_input()  # call func to get valid user input to create word square with
+    create_dictionary()
 
 
 def get_user_input():  # asks user for user input and formats it
@@ -56,6 +58,13 @@ def validate_user_input(user_input, str_length):  # validates if user input is u
             return False
         elif current_char == user_input[str_length]:  # if all chars are alphabetical, returns valid input
             return True
+
+
+def create_dictionary():
+    file = requests.get("http://norvig.com/ngrams/enable1.txt")
+    for line in file:
+        decoded_line = line.decode("utf-8")
+
 
 
 def exit_program():  # Quits program
