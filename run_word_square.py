@@ -61,14 +61,14 @@ def validate_user_input(user_input, str_length):  # validates if user input is u
             return True
 
 
-def create_dictionary():
-    file = requests.get("http://norvig.com/ngrams/enable1.txt")
-    dictionary = {}
-    for line in file:
-        decoded_line = line.decode("utf-8")
-        for word in decoded_line.split():
-            dictionary[word] = len(word)
-    return dictionary
+def create_dictionary():  # creates reference dictionary for word square
+    file = requests.get("http://norvig.com/ngrams/enable1.txt")  # gets online english dictionary file
+    dictionary = {}  # assign to a dictionary variable
+    for line in file:  # loop through each line of the file
+        decoded_line = line.decode("utf-8")  # decode each line into valid readable format
+        for word in decoded_line.split():  # splits each line into individual words
+            dictionary[word] = len(word)  # assigns each word to a key and length of the word to the value
+    return dictionary  # return filled dictionary variable
 
 
 def exit_program():  # Quits program
