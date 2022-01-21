@@ -29,7 +29,8 @@ def instructions():  # prints instructions on how program functions
 
 def run_word_square():  # creates word square
     valid_user_input = get_user_input()  # call func to get valid user input to create word square with
-    create_dictionary()
+    reference_dictionary = create_dictionary()
+    print(reference_dictionary)
 
 
 def get_user_input():  # asks user for user input and formats it
@@ -62,9 +63,12 @@ def validate_user_input(user_input, str_length):  # validates if user input is u
 
 def create_dictionary():
     file = requests.get("http://norvig.com/ngrams/enable1.txt")
+    dictionary = {}
     for line in file:
         decoded_line = line.decode("utf-8")
-
+        for word in decoded_line.split():
+            dictionary[word] = len(word)
+    return dictionary
 
 
 def exit_program():  # Quits program
