@@ -17,7 +17,7 @@ def load_menu():  # takes users choice and either runs, gives instructions or qu
         elif user_selection == "3":
             exit_program()
         else:
-            print("\ninvalid input")
+            print("\ninvalid input\n")
 
 
 def instructions():  # prints instructions on how program functions
@@ -29,17 +29,17 @@ def instructions():  # prints instructions on how program functions
 
 def run_word_square():  # creates word square
     valid_user_input = get_user_input()  # call func to get valid user input to create word square with
-    reference_dictionary = create_dictionary()
-    print(reference_dictionary)
+    reference_dictionary = create_dictionary()  # call func to create a reference dictionary
+    valid_words = get_valid_words(valid_user_input, reference_dictionary)  # call func to sort user input into valid words
+    print(valid_words)
 
 
 def get_user_input():  # asks user for user input and formats it
     while True:  # Loop until input valid
         print("Enter value to create word square:\n")
         user_input = str(input().replace(" ", "").lower())  # format to string, strip whitespace, set to lowercase
-        str_length = len(user_input) - 1  # set variable to length of inputted string
-        user_input = validate_user_input(user_input, str_length)  # call func to validate input
-        if user_input:  # if func returns true input is valid and returns value
+        str_length = len(user_input)  # set variable to length of inputted string
+        if validate_user_input(user_input, str_length):  # if func returns true input is valid and returns value
             return user_input
 
 
@@ -50,14 +50,14 @@ def validate_user_input(user_input, str_length):  # validates if user input is u
     elif int(user_input[0]) == 0:  # checks if first character of string is greater than zero
         print("Invalid input - the first character can not be zero")
         return False
-    elif (int(user_input[0]) ** 2) != str_length:  # int value at index[0] of user_input squared must equal str_length
+    elif (int(user_input[0]) ** 2) != str_length - 1:  # int value at index[0] of user_input squared must equal str_length
         print("Invalid input - input length must equal first character (number) squared")
         return False
     for current_char in user_input[1:str_length:1]:  # [start:end:step] iterates through input string from index[1]
         if not current_char.isalpha():  # evaluates if current char is alphabetical
             print("Invalid input - all characters after initial number must be letters")
             return False
-        elif current_char == user_input[str_length]:  # if all chars are alphabetical, returns valid input
+        elif current_char == user_input[str_length - 1]:  # if all chars are alphabetical, returns valid input
             return True
 
 
@@ -69,6 +69,25 @@ def create_dictionary():  # creates reference dictionary for word square
         for word in decoded_line.split():  # splits each line into individual words
             dictionary[word] = len(word)  # assigns each word to a key and length of the word to the value
     return dictionary  # return filled dictionary variable
+
+
+def get_valid_words(valid_letters, dictionary):
+    word_length = int(valid_letters[0])  # variable for specified word length
+    valid_words = []  # variable to store all valid words to return
+    for reference_word in dictionary:  # iterates through each word in reference dictionary
+        if dictionary[reference_word] == word_length:  # test if current reference word length is equal to user specified word length
+            valid_letter_list = []  # instantiates list to store the valid user inputted letters in
+            for index in range(len(valid_letters)):  # loops through valid user letter string to assign each letter to a list element
+                if not valid_letters[index].isdigit():  # if the current index is not a digit
+                    valid_letter_list.append(valid_letters[index])  # add the letter to the list
+            for reference_letter_index in range(len(reference_word)):  # iterates through each letter in valid reference word
+                for current_letter_index in range(len(valid_letter_list)):  # iterates through each letter from user's inputted letters
+                    if reference_word[reference_letter_index] == valid_letter_list[current_letter_index]:  # tests if letters in reference word are only letters in the valid letter list
+                        valid_letter_list.remove(valid_letter_list[current_letter_index])  # removes the valid letter from list if they match to ensure only reference words using only one of each valid letter are returned
+                        break  # break the loop and move to the next reference word
+            if len(valid_letter_list) == ((len(valid_letters) - 1) - word_length):  # if all the letters from the reference word match the valid letter list it can be returned
+                valid_words.append(reference_word)  # add the valid reference word to the valid words list to return
+    return valid_words  # returns list of all valid words that can be made from the letters provided
 
 
 def exit_program():  # Quits program
