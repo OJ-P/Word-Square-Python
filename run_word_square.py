@@ -27,12 +27,12 @@ def instructions():  # prints instructions on how program functions
     print(" Example input: 4 aaccdeeeemmnnnoo\n")
 
 
-def run_word_square():  # creates word square
+def run_word_square():  # function to take user input and output a word square
     valid_user_input = get_user_input()  # call func to get valid user input to create word square with
     reference_dictionary = create_dictionary()  # call func to create a reference dictionary
     valid_words = get_valid_words(valid_user_input, reference_dictionary)  # call func to sort user input into valid words
+    all_word_squares = create_word_squares(valid_words)  # call func to take all valid words and return all possible word squares
     print(valid_words)
-
 
 def get_user_input():  # asks user for user input and formats it
     while True:  # Loop until input valid
@@ -62,7 +62,10 @@ def validate_user_input(user_input, str_length):  # validates if user input is u
 
 
 def create_dictionary():  # creates reference dictionary for word square
-    file = requests.get("http://norvig.com/ngrams/enable1.txt")  # gets online english dictionary file
+    try:
+        file = requests.get("http://norvig.com/ngrams/enable1.txt")  # gets online english dictionary file
+    except requests.exceptions.RequestException as error:  # if error when getting file, exit
+        sys.exit(error)
     dictionary = {}  # assign to a dictionary variable
     for line in file:  # loop through each line of the file
         decoded_line = line.decode("utf-8")  # decode each line into valid readable format
@@ -88,6 +91,10 @@ def get_valid_words(valid_letters, dictionary):
             if len(valid_letter_list) == ((len(valid_letters) - 1) - word_length):  # if all the letters from the reference word match the valid letter list it can be returned
                 valid_words.append(reference_word)  # add the valid reference word to the valid words list to return
     return valid_words  # returns list of all valid words that can be made from the letters provided
+
+
+def create_word_squares(valid_words):
+    letters = []
 
 
 def exit_program():  # Quits program
