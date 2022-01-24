@@ -8,7 +8,7 @@ def main():  # main function - runs menu load function
 
 def load_menu():  # takes users choice and either runs, gives instructions or quits
     while True:
-        print("Main Menu\n", "1. Instructions\n", "2. Run word square\n", "3. Quit\n")
+        print("\nMain Menu\n", "1. Instructions\n", "2. Run word square\n", "3. Quit\n")
         user_selection = input()
         if user_selection == "1":
             instructions()
@@ -21,9 +21,9 @@ def load_menu():  # takes users choice and either runs, gives instructions or qu
 
 
 def instructions():  # prints instructions on how program functions
-    print("This program creates a word square.\n")
-    print("You must provide an integer to specify how many rows and columns the square will have.\n")
-    print("This must be followed by a string of letters, the amount totalling to the integer squared\n.")
+    print("This program creates a word square.")
+    print("You must provide an integer to specify how many rows and columns the square will have.")
+    print("This must be followed by a string of letters, the amount totalling to the integer squared.")
     print(" Example input: 4 aaccdeeeemmnnnoo\n")
 
 
@@ -31,8 +31,8 @@ def run_word_square():  # function to take user input and output a word square
     valid_user_input = get_user_input()  # call func to get valid user input to create word square with
     reference_dictionary = create_dictionary()  # call func to create a reference dictionary
     valid_words = get_valid_words(valid_user_input, reference_dictionary)  # call func to sort user input into valid words
-    all_word_squares = create_word_squares(valid_words)  # call func to take all valid words and return all possible word squares
-    print(valid_words)
+    word_squares = create_word_squares(valid_words, valid_user_input[0])  # call func to take all valid words and return all possible word squares
+
 
 def get_user_input():  # asks user for user input and formats it
     while True:  # Loop until input valid
@@ -45,17 +45,17 @@ def get_user_input():  # asks user for user input and formats it
 
 def validate_user_input(user_input, str_length):  # validates if user input is usable
     if not user_input[0].isdigit():  # checks if first character of string is a number
-        print("Invalid input - the first character must be a number")
+        print("\nInvalid input - the first character must be a number\n")
         return False
     elif int(user_input[0]) == 0:  # checks if first character of string is greater than zero
-        print("Invalid input - the first character can not be zero")
+        print("\nInvalid input - the first character can not be zero\n")
         return False
     elif (int(user_input[0]) ** 2) != str_length - 1:  # int value at index[0] of user_input squared must equal str_length
-        print("Invalid input - input length must equal first character (number) squared")
+        print("\nInvalid input - input length must equal first character (number) squared\n")
         return False
     for current_char in user_input[1:str_length:1]:  # [start:end:step] iterates through input string from index[1]
         if not current_char.isalpha():  # evaluates if current char is alphabetical
-            print("Invalid input - all characters after initial number must be letters")
+            print("\nInvalid input - all characters after initial number must be letters\n")
             return False
         elif current_char == user_input[str_length - 1]:  # if all chars are alphabetical, returns valid input
             return True
@@ -94,11 +94,47 @@ def get_valid_words(valid_letters, dictionary):
 
 
 def create_word_squares(valid_words):
-    letters = []
+    build_trie(valid_words)
 
 
 def exit_program():  # Quits program
     sys.exit()
 
+
+class TrieNode:
+    def __init__(self):
+        self.characters = [26]
+        self.complete_word = False
+
+
+def build_trie(word_list, word_length):
+    root = {}  # create dictionary to create tree with
+    for word in word_list:  # loop through word list and assign to
+        root[word] = []
+
+    print(root)
+
+    for word_o in root:
+        for word_c in word_list:
+            if word_o[1] == word_c[0]:
+                root[word_o].append(word_c)
+
+
+    print(root)
+
+
+
+
+# ['ball', 'area', 'abba', 'alls', 'alan', 'laad', 'lead', 'lady']
+
+# root = {'ball' : [{'area' : [{'lead' : 'lady}, 'blaa',}, 'abba', 'alls', 'alan']
+#         'area' : []
+#         'abba' : []
+#         'alls' : ['laad', 'lead', 'lady']
+#         'alan' : ['laad', 'lead', 'lady']
+#         'laad' : ['area', 'abba', 'alls', 'alan']
+#         'lead' : []
+#         'lady' : ['area', 'abba', 'alls', 'alan']
+#         }
 
 main()  # Calls main function
