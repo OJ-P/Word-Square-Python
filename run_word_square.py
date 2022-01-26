@@ -94,18 +94,26 @@ def get_valid_words(valid_letters, dictionary):
 
 
 def create_word_squares(word_list, letter_list):
-    def backtrack(index, current_word):  # current word is a list
+
+    def find_square(index, current_word):  # current word is a list
         nonlocal result
         print(len(current_word), len(current_word[0]))
         if len(current_word) == len(current_word[0]):
             result.append(list(current_word))
             return
         prefix = ''.join([word[index] for word in current_word])
+        for candidate in getPrefixes(prefix):
+            current_word.append(candidate)
+            find_square(index + 1, current_word)
+            current_word.pop()
 
-    result = []
-    for word in word_list:
-        backtrack(1, [word])
-    return result
+    def potential_squares():
+        result = []
+        for words in word_list:
+            find_square(1, [words])
+        return result
+
+    potential_squares()
 
 
 def exit_program():  # Quits program
