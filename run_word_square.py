@@ -31,7 +31,7 @@ def run_word_square():  # function to take user input and output a word square
     valid_user_input = get_user_input()  # call func to get valid user input to create word square with
     reference_dictionary = create_dictionary()  # call func to create a reference dictionary
     valid_words = get_valid_words(valid_user_input, reference_dictionary)  # call func to sort user input into valid words
-    word_squares = create_word_squares(valid_words, valid_user_input[0])  # call func to take all valid words and return all possible word squares
+    word_squares = create_word_squares(valid_words, valid_user_input)  # call func to take all valid words and return all possible word squares
 
 
 def get_user_input():  # asks user for user input and formats it
@@ -93,48 +93,23 @@ def get_valid_words(valid_letters, dictionary):
     return valid_words  # returns list of all valid words that can be made from the letters provided
 
 
-def create_word_squares(valid_words):
-    build_trie(valid_words)
+def create_word_squares(word_list, letter_list):
+    def backtrack(index, current_word):  # current word is a list
+        nonlocal result
+        print(len(current_word), len(current_word[0]))
+        if len(current_word) == len(current_word[0]):
+            result.append(list(current_word))
+            return
+        prefix = ''.join([word[index] for word in current_word])
+
+    result = []
+    for word in word_list:
+        backtrack(1, [word])
+    return result
 
 
 def exit_program():  # Quits program
     sys.exit()
 
-
-class TrieNode:
-    def __init__(self):
-        self.characters = [26]
-        self.complete_word = False
-
-
-def build_trie(word_list, word_length):
-    root = {}  # create dictionary to create tree with
-    for word in word_list:  # loop through word list and assign to
-        root[word] = []
-
-    print(root)
-
-    for word_o in root:
-        for word_c in word_list:
-            if word_o[1] == word_c[0]:
-                root[word_o].append(word_c)
-
-
-    print(root)
-
-
-
-
-# ['ball', 'area', 'abba', 'alls', 'alan', 'laad', 'lead', 'lady']
-
-# root = {'ball' : [{'area' : [{'lead' : 'lady}, 'blaa',}, 'abba', 'alls', 'alan']
-#         'area' : []
-#         'abba' : []
-#         'alls' : ['laad', 'lead', 'lady']
-#         'alan' : ['laad', 'lead', 'lady']
-#         'laad' : ['area', 'abba', 'alls', 'alan']
-#         'lead' : []
-#         'lady' : ['area', 'abba', 'alls', 'alan']
-#         }
 
 main()  # Calls main function
