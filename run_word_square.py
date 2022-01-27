@@ -32,7 +32,7 @@ def run_word_square():  # function to take user input and output a word square
     reference_dictionary = create_dictionary()  # call func to create a reference dictionary
     valid_words = get_valid_words(valid_user_input, reference_dictionary)  # call func to sort user input into valid words
     word_squares = create_word_squares(valid_words, valid_user_input)  # call func to take all valid words and return all possible word squares
-
+    print(word_squares)
 
 def get_user_input():  # asks user for user input and formats it
     while True:  # Loop until input valid
@@ -96,24 +96,33 @@ def get_valid_words(valid_letters, dictionary):
 def create_word_squares(word_list, letter_list):
 
     def find_square(index, current_word):  # current word is a list
+        def get_prefixes(prefixes):
+            if prefix in prefixes:
+                return prefixes[prefix]
+            result = []
+            prefixes[prefix] = []
+            for word in current_word:
+                if word.startswith(prefix):
+                    prefixes[prefix].append(word)
+            return result
+
         nonlocal result
         print(len(current_word), len(current_word[0]))
         if len(current_word) == len(current_word[0]):
             result.append(list(current_word))
             return
         prefix = ''.join([word[index] for word in current_word])
-        for candidate in getPrefixes(prefix):
+        for candidate in get_prefixes(prefix):
             current_word.append(candidate)
             find_square(index + 1, current_word)
             current_word.pop()
 
-    def potential_squares():
-        result = []
-        for words in word_list:
-            find_square(1, [words])
-        return result
+    result = []
+    for words in word_list:
+        find_square(1, [words])
+    return result
 
-    potential_squares()
+
 
 
 def exit_program():  # Quits program
