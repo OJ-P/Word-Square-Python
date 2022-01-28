@@ -2,8 +2,7 @@ import sys  # to allow sys.exit()
 import requests  # to allow reading text from URL
 
 
-class WordSquare: # class to take user input and output a word square
-    @staticmethod
+def word_square():  # func to take user input and output a word square
     def get_user_input():  # asks user for user input and formats it
 
         def validate_user_input(u_input, length):  # validates if user input is usable
@@ -30,7 +29,6 @@ class WordSquare: # class to take user input and output a word square
             if validate_user_input(user_input, str_length):  # if func returns true input is valid and returns value
                 return user_input
 
-    @staticmethod
     def create_dictionary():  # creates reference dictionary for word square
         try:
             file = requests.get("http://norvig.com/ngrams/enable1.txt")  # gets online english dictionary file
@@ -43,7 +41,6 @@ class WordSquare: # class to take user input and output a word square
                 dictionary[word] = len(word)  # assigns each word to a key and length of the word to the value
         return dictionary  # return filled dictionary variable
 
-    @staticmethod
     def get_valid_words(valid_letters, dictionary):
         word_length = int(valid_letters[0])  # variable for specified word length
         valid_words = []  # variable to store all valid words to return
@@ -62,7 +59,6 @@ class WordSquare: # class to take user input and output a word square
                     valid_words.append(reference_word)  # add the valid reference word to the valid words list to return
         return sorted(valid_words)  # returns list of all valid words that can be made from the letters provided in alphabetical order
 
-    @staticmethod
     def create_word_squares(word_list, word_length):
         def get_prefixes(prefix):
             nonlocal prefixes  # refers to prefix dictionary from outside function e.i. e.i. prefixes:{'c':[w1, w2, w3, w4]}
@@ -92,20 +88,22 @@ class WordSquare: # class to take user input and output a word square
             backtracking(1, [words], word_length)  # passes current word as a 1 item list
         return full_squares  # return successful squares
 
-    @staticmethod
-    def format_squares(word_squares):
-        word_squares
+    def format_squares(squares):
+        for square in squares:
+            for word in square:
+                print(" ".join(word))
+            print("\n")
 
     valid_user_input = get_user_input()  # call func to get valid user input to create word square with
     reference_dictionary = create_dictionary()  # call func to create a reference dictionary
-    valid_words = get_valid_words(valid_user_input,reference_dictionary)  # call func to sort user input into valid words
+    valid_words = get_valid_words(valid_user_input, reference_dictionary)  # call func to sort user input into valid words
     word_squares = create_word_squares(valid_words, int(valid_user_input[0]))  # call func to take all valid words and return all possible word squares
-    formatted_squares = format_squares(word_squares)  # call func to format squares to display to user
+    format_squares(word_squares)  # call func to format squares to display to user and print out
 
 
-class Menu:  # takes users choice and either runs, gives instructions or quits
+def menu():  # takes users choice and either runs, gives instructions or quits
     while True:
-        print("\nMain Menu\n", "1. Instructions\n", "2. Run word square\n", "3. Quit\n")
+        print("Main Menu\n", "1. Instructions\n", "2. Run word square\n", "3. Quit\n")
         user_selection = input()
         if user_selection == "1":
             print("This program creates a word square.")
@@ -113,11 +111,11 @@ class Menu:  # takes users choice and either runs, gives instructions or quits
             print("This must be followed by a string of letters, the amount totalling to the integer squared.")
             print(" Example input: 4 aaccdeeeemmnnnoo\n")
         elif user_selection == "2":
-            WordSquare()
+            word_square()
         elif user_selection == "3":
             sys.exit()
         else:
-            print("\ninvalid input\n")
+            print("invalid input\n")
 
 
-Menu()  # Calls menu class to start program
+menu()  # Calls menu class to start program
