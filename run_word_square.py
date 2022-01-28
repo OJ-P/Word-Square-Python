@@ -94,35 +94,33 @@ def get_valid_words(valid_letters, dictionary):
 
 
 def create_word_squares(word_list, letter_list):
+    def get_prefixes(prefix):
+        nonlocal prefixes
+        if prefix in prefixes:
+            return prefixes[prefix]
 
-    def find_square(index, current_word):  # current word is a list
-        def get_prefixes(prefixes):
-            if prefix in prefixes:
-                return prefixes[prefix]
-            result = []
-            prefixes[prefix] = []
-            for word in current_word:
-                if word.startswith(prefix):
-                    prefixes[prefix].append(word)
-            return result
+        prefixes[prefix] = []
+        for word in word_list:
+            if word.startswith(prefix):
+                prefixes[prefix].append(word)
+        return prefixes[prefix]
 
+    def backtracking(index, current_word):
         nonlocal result
-        print(len(current_word), len(current_word[0]))
         if len(current_word) == len(current_word[0]):
             result.append(list(current_word))
             return
         prefix = ''.join([word[index] for word in current_word])
         for candidate in get_prefixes(prefix):
             current_word.append(candidate)
-            find_square(index + 1, current_word)
+            backtracking(index + 1, current_word)
             current_word.pop()
 
+    prefixes = {}
     result = []
     for words in word_list:
-        find_square(1, [words])
+        backtracking(1, [words])
     return result
-
-
 
 
 def exit_program():  # Quits program
