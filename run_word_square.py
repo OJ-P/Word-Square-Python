@@ -31,8 +31,9 @@ def run_word_square():  # function to take user input and output a word square
     valid_user_input = get_user_input()  # call func to get valid user input to create word square with
     reference_dictionary = create_dictionary()  # call func to create a reference dictionary
     valid_words = get_valid_words(valid_user_input, reference_dictionary)  # call func to sort user input into valid words
-    word_squares = create_word_squares(valid_words, valid_user_input)  # call func to take all valid words and return all possible word squares
+    word_squares = create_word_squares(valid_words, valid_user_input[0])  # call func to take all valid words and return all possible word squares
     print(word_squares)
+
 
 def get_user_input():  # asks user for user input and formats it
     while True:  # Loop until input valid
@@ -93,34 +94,38 @@ def get_valid_words(valid_letters, dictionary):
     return valid_words  # returns list of all valid words that can be made from the letters provided
 
 
-def create_word_squares(word_list, letter_list):
+def create_word_squares(word_list, word_length):
+
     def get_prefixes(prefix):
-        nonlocal prefixes
-        if prefix in prefixes:
-            return prefixes[prefix]
+        nonlocal prefixes  # refers to prefix dictionary from outside function e.i. e.i. prefixes:{'c':[w1, w2, w3, w4]}
+        if prefix in prefixes:  # if the current prefix is any key in the prefixes dictionary
+            return prefixes[prefix]  # return the dictionary values (a word list) at the key the prefix value currently is i.e. prefix = c prefixes:{'c':[w1, w2, w3, w4]} returns [w1,w2,w3,w4]
+        prefixes[prefix] = []  # sets prefix to dictionary key and value to a list e.i. prefixes:{'c':[]}
+        for word in word_list:  # loops through every word in the master word list
+            if word.startswith(prefix):  # if the current word starts with the current prefix e.i. word = 'aced, prefix = 'c' would be false
+                prefixes[prefix].append(word)  # add the current word to the prefixes dictionary as a value in a list where the prefix is the key i.e. prefix = c, word = call , prefixes{'c':[call <- appends word here]}
+        return prefixes[prefix]  # return the dictionary values (a word list) at the key the prefix value currently is i.e. prefix = c prefixes:{'c':[w1, w2, w3, w4]} returns [w1,w2,w3,w4]
 
-        prefixes[prefix] = []
-        for word in word_list:
-            if word.startswith(prefix):
-                prefixes[prefix].append(word)
-        return prefixes[prefix]
+    def backtracking(index, current_word_list, word_size):
+        nonlocal full_squares  # allow reference to the full squares variable from outside function
+        if len(current_word_list) == word_size:  # if length of list is equal to length of word return as full square
+            full_squares.append(list(current_word_list))  # add the complete square as a list in the full_squares list fullsqr[[w1,w2,w3,w4]]
+            return  # exit function back to next word in word_list given
 
-    def backtracking(index, current_word):
-        nonlocal result
-        if len(current_word) == len(current_word[0]):
-            result.append(list(current_word))
-            return
-        prefix = ''.join([word[index] for word in current_word])
-        for candidate in get_prefixes(prefix):
-            current_word.append(candidate)
-            backtracking(index + 1, current_word)
-            current_word.pop()
+        for word in current_word_list:  # loop through every word in the current list
+            prefix = ''.join(word[index])  # sets prefix to the letter at the index of the current word in the list i.e. word:"aced" index:1 prefix = "c"
 
-    prefixes = {}
-    result = []
-    for words in word_list:
-        backtracking(1, [words])
-    return result
+        # generator function
+        for candidate in get_prefixes(prefix):  #
+            current_word_list.append(candidate)
+            backtracking(index + 1, current_word_list, word_size)
+            current_word_list.pop()
+
+    prefixes = {}  # create dictionary to store word prefixes in
+    full_squares = []  # create list to store completed word squares in
+    for words in word_list:  # loop through all words in the master word list
+        backtracking(1, [words], word_length)  # passes current word as a 1 item list
+    return full_squares  # return successful squares
 
 
 def exit_program():  # Quits program
