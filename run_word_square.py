@@ -3,6 +3,7 @@ import requests  # to allow reading text from URL
 
 
 def word_square():  # func to take user input and output a word square
+
     def get_user_input():  # asks user for user input and formats it
 
         def validate_user_input(u_input, length):  # validates if user input is usable
